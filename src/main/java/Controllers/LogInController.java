@@ -1,0 +1,63 @@
+package Controllers;
+
+import DBConnection.DBConnection;
+import DBConnection.DBQuery;
+import TimeZone.TimeZone;
+import User.User;
+import javafx.fxml.FXML;
+import javafx.scene.control.Button;
+import javafx.scene.control.Label;
+import javafx.scene.control.TextField;
+
+import java.io.IOException;
+import java.sql.SQLException;
+
+public class LogInController {
+    public Button loginExitButton;
+    @FXML
+    private Button SignInButton;
+    @FXML
+    private TextField LoginUsername;
+
+    @FXML
+    private TextField LoginPassword;
+    @FXML
+    private Label timeZone;
+    public static User user;
+
+
+    @FXML
+    protected void initialize(){
+        timeZone.setText(TimeZone.getCurrentTimeZone());
+    }
+
+    @FXML
+    protected void onLoginClick() throws SQLException, IOException {
+        String un = LoginUsername.getText();
+        String ps = LoginPassword.getText();
+        int DBResult = DBQuery.loginQuery(un, ps);
+        if(DBResult > 0){
+            this.setUser(DBResult);
+            SceneManager.ChangeScene("Appointments.fxml", SignInButton, "Main Menu");
+        } else {
+            SceneManager.ErrorPopup("Username/Password Wrong!");
+        }
+    }
+
+    private void setUser(int userID){
+        try {
+            this.user = new User(userID);
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+    }
+    public static User getUser(){
+        return user;
+    }
+
+    @FXML
+    protected void onExitClick() throws SQLException {
+        DBConnection.closeConnection();
+        System.exit(0);
+    }
+}
