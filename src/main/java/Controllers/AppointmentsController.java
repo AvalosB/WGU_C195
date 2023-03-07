@@ -17,10 +17,13 @@ import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.stage.Stage;
+import javafx.util.converter.LocalDateStringConverter;
 
 import java.io.IOException;
 import java.sql.SQLException;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.LocalTime;
 
 import static java.time.temporal.ChronoUnit.DAYS;
 
@@ -28,6 +31,7 @@ public class AppointmentsController {
     public Button ModAppointment;
     private User loggedInUser = LogInController.getUser();
     private static ObservableList<Appointment> filteredAppointments = FXCollections.observableArrayList();
+    private ObservableList<Appointment> associatedAppointments = FXCollections.observableArrayList();
     public TableView<Appointment> appointmentTable;
     public TableColumn appID;
     public TableColumn appTitle;
@@ -77,6 +81,18 @@ public class AppointmentsController {
         customerPhone.setCellValueFactory(new PropertyValueFactory<>("phone"));
         customerState.setCellValueFactory(new PropertyValueFactory<>("state"));
         customerPostalCode.setCellValueFactory(new PropertyValueFactory<>("postalCode"));
+
+        associatedAppointments = user.getAppointments();
+
+        associatedAppointments.forEach((app) -> {
+            System.out.println("Start " + app.getStart());
+            LocalDateTime appStart = TimeZone.changeStringToDateTime(app.getStart());
+            LocalDateTime now = appStart.plusMinutes(15);
+
+            if(appStart.isBefore(now)){
+                System.out.println("Yes");
+            }
+        });
 
     }
 
