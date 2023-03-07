@@ -184,4 +184,43 @@ public class DBQuery {
         }
     }
 
+    public static ResultSet getCountries(){
+        try {
+            String sql = "SELECT Country FROM countries";
+            PreparedStatement ps = DBConnection.conn.prepareStatement(sql);
+            ResultSet rs = ps.executeQuery();
+            return rs;
+        } catch (Exception e){
+            e.getMessage();
+        }
+        return null;
+    }
+
+    public static ResultSet getDivisions(String countryName){
+        int countryID = 0;
+        try {
+            String sql = "SELECT * FROM countries WHERE Country = ?";
+            PreparedStatement ps = DBConnection.conn.prepareStatement(sql);
+            ps.setString(1, countryName);
+            ResultSet rs = ps.executeQuery();
+            while(rs.next()){
+                countryID = rs.getInt("Country_ID");
+            }
+        } catch (SQLException e ){
+            e.getMessage();
+        }
+
+        try {
+            String sql = "SELECT * FROM first_level_divisions WHERE Country_ID = ?";
+            PreparedStatement ps = DBConnection.conn.prepareStatement(sql);
+            ps.setInt(1, countryID);
+            ResultSet rs = ps.executeQuery();
+            return rs;
+        } catch (SQLException e ){
+            e.getMessage();
+        }
+
+        return null;
+    }
+
 }

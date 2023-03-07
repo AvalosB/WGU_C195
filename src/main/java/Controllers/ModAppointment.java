@@ -3,13 +3,14 @@ package Controllers;
 import DBConnection.DBQuery;
 import User.Appointment;
 import User.User;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
-import javafx.scene.control.Button;
-import javafx.scene.control.ComboBox;
-import javafx.scene.control.DatePicker;
-import javafx.scene.control.TextField;
+import javafx.scene.control.*;
 import TimeZone.TimeZone;
 import java.io.IOException;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
@@ -32,19 +33,78 @@ public class ModAppointment {
     public ComboBox StartTimeBox;
     public TextField appointmentID;
     private Appointment selectedAppointment;
+    public ObservableList<Integer> ContactComboBoxArray = FXCollections.observableArrayList();
+    public ObservableList<Integer> UserIDComboBoxArray = FXCollections.observableArrayList();
+    public ObservableList<Integer> CustomerIDComboBoxArray = FXCollections.observableArrayList();
 
     @FXML
     public void initialize(){
         setAppointmentTimes();
+        setContactComboBox();
+        setUserIDBox();
+        setCustomerIDBox();
+        StartDate.setDayCellFactory(param -> new DateCell() {
+            @Override
+            public void updateItem(LocalDate date, boolean empty) {
+                super.updateItem(date, empty);
+                setDisable(empty || date.compareTo(LocalDate.now()) < 0 );
+            }
+        });
+
+        EndDate.setDayCellFactory(param -> new DateCell() {
+            @Override
+            public void updateItem(LocalDate date, boolean empty) {
+                super.updateItem(date, empty);
+                setDisable(empty || date.compareTo(LocalDate.now()) < 0 );
+            }
+        });
+    }
+
+
+    private void setContactComboBox(){
+        ResultSet rs = DBQuery.contactQuery();
+        try {
+            while (rs.next()) {
+                ContactComboBoxArray.add(rs.getInt("Contact_ID"));
+            }
+        }catch (SQLException e ){
+            System.out.println(e);
+        }
+        Contact.setItems(ContactComboBoxArray);
+    }
+
+    private void setUserIDBox(){
+        ResultSet rs = DBQuery.UserIDQuery();
+        try {
+            while(rs.next()){
+                UserIDComboBoxArray.add(rs.getInt("User_ID"));
+            }
+        } catch (SQLException e) {
+            System.out.println(e);
+        }
+        UserID.setItems(UserIDComboBoxArray);
+    }
+
+    private void setCustomerIDBox(){
+        ResultSet rs = DBQuery.CustomerIDQuery();
+        try {
+            while(rs.next()){
+                CustomerIDComboBoxArray.add(rs.getInt("Customer_ID"));
+            }
+        } catch(SQLException e){
+            System.out.println(e);
+        }
+        CustomerID.setItems(CustomerIDComboBoxArray);
     }
 
     @FXML
-    public void onCancelClick(){
-
-        try {
-            SceneManager.ChangeScene("Appointments.fxml", AppointmentCancel, "Main Menu");
-        } catch (IOException e) {
-            System.out.println("Error Canceling Modded Appointment");
+    public void onCancelClick() {
+        if (SceneManager.AlertPopup("Confirm", "This Appointment will Not be saved.", "Are you sure?")){
+            try {
+                SceneManager.ChangeScene("Appointments.fxml", AppointmentCancel, "Main Menu");
+            } catch (IOException e) {
+                System.out.println("Error Canceling Modded Appointment");
+            }
         }
     }
 

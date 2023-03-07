@@ -54,9 +54,9 @@
             <TextField editable="false" layoutX="210.0" layoutY="75.0" promptText="Auto-Generated" />
             <TextField layoutX="210.0" layoutY="125.0" />
             <TextField layoutX="210.0" layoutY="225.0" />
-            <TextField layoutX="210.0" layoutY="275.0" />
-            <TextField layoutX="210.0" layoutY="325.0" />
             <TextField layoutX="210.0" layoutY="375.0" />
+            <ComboBox fx:id="addCustomerCountryComboBox" layoutX="210.0" layoutY="275.0" onAction="#updateDivisionComboBox" prefWidth="150.0" />
+            <ComboBox fx:id="addCustomerStateComboBox" layoutX="210.0" layoutY="325.0" prefWidth="150.0" />
          </children></Pane>
    </children>
 </AnchorPane>

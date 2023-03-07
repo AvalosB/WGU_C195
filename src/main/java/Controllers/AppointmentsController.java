@@ -89,7 +89,7 @@ public class AppointmentsController {
             LocalDateTime appStart = TimeZone.changeStringToDateTime(app.getStart());
             LocalDateTime now = appStart.plusMinutes(15);
 
-            if(appStart.isBefore(now)){
+            if(appStart.isBefore(now) && !appStart.isBefore(now)){
                 System.out.println("Yes");
             }
         });
@@ -181,10 +181,12 @@ public class AppointmentsController {
 
     @FXML
     public void removeAppointment() throws SQLException {
-        Appointment app = appointmentTable.getSelectionModel().getSelectedItem();
-        int id = app.getID();
-        DBQuery.deleteAppointment(id);
-        User.removeAppointment(app);
-        appointmentTable.refresh();
+        if(SceneManager.AlertPopup("Confirm", "Permenently Delete this Appointment?", "Are you sure?")){
+            Appointment app = appointmentTable.getSelectionModel().getSelectedItem();
+            int id = app.getID();
+            DBQuery.deleteAppointment(id);
+            User.removeAppointment(app);
+            appointmentTable.refresh();
+        }
     }
 }

@@ -51,8 +51,13 @@ public class AddAppointment {
                 setDisable(empty || date.compareTo(LocalDate.now()) < 0 );
             }
         });
-
-        EndDate.setDisable(true);
+        EndDate.setDayCellFactory(param -> new DateCell() {
+            @Override
+            public void updateItem(LocalDate date, boolean empty) {
+                super.updateItem(date, empty);
+                setDisable(empty || date.compareTo(LocalDate.now()) < 0 );
+            }
+        });
     }
 
     private void setContactComboBox(){
@@ -93,6 +98,9 @@ public class AddAppointment {
 
     @FXML
     private void OnSaveClick(){
+
+        //Make Sure Dates are the Same day
+
         String appointmentTitle = Title.getText();
         String appointmentDescription = Description.getText();
         String appointmentLocation = Location.getText();
@@ -141,12 +149,14 @@ public class AddAppointment {
 
     @FXML
     private void onCancelClick(){
-        checkDates();
-        try {
-            SceneManager.ChangeScene("Appointments.fxml", AddAppointmentCancel, "Main Menu");
-        } catch (IOException e) {
-            System.out.println("Error Canceling Add Appointment");
+        if(SceneManager.AlertPopup("Confirm", "This Appointment will NOT be saved.", "Are you sure?")){
+            try {
+                SceneManager.ChangeScene("Appointments.fxml", AddAppointmentCancel, "Main Menu");
+            } catch (IOException e) {
+                System.out.println("Error Canceling Add Appointment");
+            }
         }
+
     }
 
     private void setAppointmentTimes(){

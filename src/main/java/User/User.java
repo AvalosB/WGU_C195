@@ -18,7 +18,15 @@ public class User {
     public User(int userID) throws SQLException {
         this.setUserID(userID);
         setAppointments();
-        setCustomers();
+        Appointments.forEach(app -> {
+            int custID = app.CustomerID;
+            if(!(uniqueUserIDS.contains(custID))){
+                try {setCustomers(custID);}
+                catch(Exception e){
+                    e.getMessage();
+                }
+            }
+        });
     }
 
     private void setUserID(int userID){
@@ -43,6 +51,14 @@ public class User {
         }
     }
 
+    public void refreshCustomers() throws SQLException {
+
+        for(int i : uniqueUserIDS){
+            Customer cust = new Customer(i);
+            associatedCustomers.add(cust);
+        }
+    }
+
     private void setAppointments() throws SQLException {
         ResultSet rs = DBQuery.appointmentsQuery(UserID);
         while (rs.next()){
@@ -58,7 +74,7 @@ public class User {
             int contID = rs.getInt("Contact_ID");
             Appointment app = new Appointment(id, title, desc, loc, type, start, end, custID, userID, contID);
 
-            if(uniqueUserIDS.stream().count() < 1){
+            /*if(uniqueUserIDS.stream().count() < 1){
                 uniqueUserIDS.add(custID);
             } else {
                 for(int i : uniqueUserIDS){
@@ -66,22 +82,32 @@ public class User {
                         uniqueUserIDS.add(i);
                     }
                 }
-            }
+            }*/
 
             Appointments.add(app);
 
-            System.out.println("User " + getAssociatedCustomers().stream().count());
+            //System.out.println("User " + getAssociatedCustomers().stream().count());
         }
 
-        System.out.println(uniqueUserIDS);
+        //System.out.println(uniqueUserIDS);
     }
 
     public static ObservableList getAssociatedCustomers(){ return associatedCustomers; }
 
-    private void setCustomers() throws SQLException {
+    /*private void setCustomers() throws SQLException {
         for(int i : uniqueUserIDS){
             Customer cust = new Customer(i);
             associatedCustomers.add(cust);
+        }
+    }*/
+
+    private void setCustomers(int custID) throws SQLException {
+        uniqueUserIDS.add(custID);
+        ResultSet customerSet = DBQuery.customerQuery(custID);
+        while(customerSet.next()){
+            int cs = customerSet.getInt("Customer_ID");
+            Customer customerToAdd = new Customer(cs);
+            associatedCustomers.add(customerToAdd);
         }
     }
 

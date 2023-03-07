@@ -7,9 +7,11 @@ import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
+import javafx.scene.control.ButtonType;
 import javafx.stage.Stage;
 import java.io.IOException;
 import java.sql.SQLException;
+import java.util.Optional;
 
 public class SceneManager {
     public static void CloseApplication() throws SQLException {
@@ -30,5 +32,19 @@ public class SceneManager {
     public static void ErrorPopup(String message){
         Alert alert = new Alert(Alert.AlertType.ERROR, message);
         alert.showAndWait();
+    }
+
+    public static boolean AlertPopup(String title, String header, String content){
+        Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
+        alert.setTitle(title);
+        alert.setHeaderText(header);
+        alert.setContentText(content);
+        Optional<ButtonType> result = alert.showAndWait();
+        if (result.get() == ButtonType.OK){
+            return true;
+        }
+        else {
+            return false;
+        }
     }
 }
