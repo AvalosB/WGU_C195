@@ -128,6 +128,7 @@ public class ModAppointment {
         if(FormVerification.verifyEndStartDates(appointmentStart, appointmentEnd) && FormVerification.verifyStartDate(appointmentStart)){
             DBQuery.modifyAppointment(Title, appointmentDescription, appointmentLocation, appointmentType, appointmentStart, appointmentEnd, createTime, appointmentCreatedBy, appointmentLastUpdated, appointmentCreatedBy, appointmentCustomerID, appointmentUserID, appointmentContactID, ID);
             LogInController.user.refreshAppointments();
+            LogInController.user.refreshCustomers();
             try {
                 SceneManager.ChangeScene("Appointments.fxml", AppointmentCancel, "Main Menu");
             } catch (IOException e) {

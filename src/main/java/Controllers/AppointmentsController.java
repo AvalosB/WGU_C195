@@ -17,13 +17,13 @@ import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.stage.Stage;
-import javafx.util.converter.LocalDateStringConverter;
 
 import java.io.IOException;
 import java.sql.SQLException;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.time.LocalTime;
+import java.time.format.DateTimeFormatter;
+import java.util.concurrent.atomic.AtomicBoolean;
 
 import static java.time.temporal.ChronoUnit.DAYS;
 
@@ -58,7 +58,7 @@ public class AppointmentsController {
     public Button addAppointmentButton;
     @FXML
     public Button AppointmentsExitButton;
-
+    private boolean appInFifteen = false;
     User user = LogInController.user;
     @FXML
     protected void initialize(){
@@ -85,15 +85,18 @@ public class AppointmentsController {
         associatedAppointments = user.getAppointments();
 
         associatedAppointments.forEach((app) -> {
-            System.out.println("Start " + app.getStart());
-            LocalDateTime appStart = TimeZone.changeStringToDateTime(app.getStart());
-            LocalDateTime now = appStart.plusMinutes(15);
+            DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm");
+            LocalDateTime appStart = LocalDateTime.parse(app.getStart(), dtf);
+            LocalDateTime now = LocalDateTime.now();
 
-            if(appStart.isBefore(now) && !appStart.isBefore(now)){
-                System.out.println("Yes");
+            if(appStart.isAfter(now) && appStart.isBefore(now.plusMinutes(15))){
+                this.appInFifteen = true;
             }
         });
 
+        if(appInFifteen){
+            SceneManager.ErrorPopup("You Have an Appointment Within 15 Minutes");
+        }
     }
 
     @FXML
@@ -187,6 +190,8 @@ public class AppointmentsController {
             DBQuery.deleteAppointment(id);
             User.removeAppointment(app);
             appointmentTable.refresh();
+            user.refreshCustomers();
+            customerTable.refresh();
         }
     }
 }

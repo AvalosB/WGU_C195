@@ -1,10 +1,12 @@
 package DBConnection;
 
+import Controllers.LogInController;
 import javafx.collections.ObservableList;
 import User.User;
 
 import java.io.IOException;
 import java.sql.*;
+import java.time.LocalDateTime;
 
 public class DBQuery {
     public static int loginQuery(String username, String password) throws SQLException {
@@ -223,4 +225,39 @@ public class DBQuery {
         return null;
     }
 
+    public static void addCustomerToDB(String name, String address, String postalCode, String phone, String divisionName){
+        LocalDateTime createDate = LocalDateTime.now();
+        int userID = LogInController.user.getUserID();
+        String createdBy = UserNameQuery(userID);
+        int divisionID = 0;
+        try{
+            String sql = "SELECT * FROM first_level_divisions WHERE Division = ?";
+            PreparedStatement ps = DBConnection.conn.prepareStatement(sql);
+            ps.setString(1, divisionName);
+            ResultSet rs = ps.executeQuery();
+            while(rs.next()){
+                divisionID = rs.getInt("Division_ID");
+            }
+        } catch (Exception e){
+            e.getMessage();
+        }
+
+        try{
+            String sql = "INSERT INTO customers (Customer_Name, Address, Postal_Code, Phone, Create_Date, Created_By, Last_Update, Last_Updated_By, Division_ID) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)";
+            PreparedStatement ps = DBConnection.conn.prepareStatement(sql);
+            ps.setString(1, name);
+            ps.setString(2, address);
+            ps.setString(3, postalCode);
+            ps.setString(4, phone);
+            ps.setString(5, createDate.toString());
+            ps.setString(6, createdBy);
+            ps.setString(7, createDate.toString());
+            ps.setString(8, createdBy);
+            ps.setInt(9, divisionID);
+            ps.executeUpdate();
+        }catch(Exception e){
+            e.getMessage();
+        }
+
+    }
 }

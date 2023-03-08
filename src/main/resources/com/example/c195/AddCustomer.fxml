@@ -8,7 +8,7 @@
    <children>
       <Pane prefHeight="500.0" prefWidth="425.0">
          <children>
-            <TextField layoutX="210.0" layoutY="175.0" />
+            <TextField fx:id="addCustomerAddress" layoutX="210.0" layoutY="175.0" />
             <Button fx:id="addCustomerCancel" layoutX="307.0" layoutY="425.0" mnemonicParsing="false" onAction="#addCustomerCancel" text="Cancel" />
             <Label layoutX="15.0" layoutY="15.0" text="Add Customer">
                <font>
@@ -52,9 +52,9 @@
             </Label>
             <Button fx:id="addCustomerSave" layoutX="213.0" layoutY="425.0" mnemonicParsing="false" onAction="#addCustomerSave" text="Save" />
             <TextField editable="false" layoutX="210.0" layoutY="75.0" promptText="Auto-Generated" />
-            <TextField layoutX="210.0" layoutY="125.0" />
-            <TextField layoutX="210.0" layoutY="225.0" />
-            <TextField layoutX="210.0" layoutY="375.0" />
+            <TextField fx:id="addCustomerName" layoutX="210.0" layoutY="125.0" />
+            <TextField fx:id="addCustomerPhone" layoutX="210.0" layoutY="225.0" />
+            <TextField fx:id="addCustomerPostalCode" layoutX="210.0" layoutY="375.0" />
             <ComboBox fx:id="addCustomerCountryComboBox" layoutX="210.0" layoutY="275.0" onAction="#updateDivisionComboBox" prefWidth="150.0" />
             <ComboBox fx:id="addCustomerStateComboBox" layoutX="210.0" layoutY="325.0" prefWidth="150.0" />
          </children></Pane>

@@ -117,6 +117,8 @@ public class AddAppointment {
         int appointmentContactID = Integer.parseInt(Contact.getValue().toString());
         if(FormVerification.verifyEndStartDates(appointmentStart, appointmentEnd) && FormVerification.verifyStartDate(appointmentStart)){
             DBQuery.addAppointment(appointmentTitle, appointmentDescription, appointmentLocation, appointmentType, appointmentStart, appointmentEnd, createTime, appointmentCreatedBy, appointmentLastUpdated, appointmentCreatedBy, appointmentCustomerID, appointmentUserID, appointmentContactID);
+            LogInController.user.refreshAppointments();
+            LogInController.user.refreshCustomers();
             try {
                 SceneManager.ChangeScene("Appointments.fxml", AppointmentSave, "Main Menu");
                 LogInController.user.refreshAppointments();
