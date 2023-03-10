@@ -128,8 +128,7 @@ public class DBQuery {
     }
 
     public static String getCustomerState(int division_ID){
-        int countryID = 0;
-        String countryName = null;
+
         try {
             System.out.println(division_ID);
             String sql = "SELECT * FROM first_level_divisions WHERE Division_ID = ?";
@@ -137,26 +136,12 @@ public class DBQuery {
             ps.setInt(1, division_ID);
             ResultSet rs = ps.executeQuery();
             while(rs.next()){
-                countryID = rs.getInt("Country_ID");
+                return rs.getString("Division");
             }
         } catch (SQLException e ){
             e.getMessage();
         }
-
-        try {
-            System.out.println(countryID);
-            String sql = "SELECT * FROM countries WHERE Country_ID = ?";
-            PreparedStatement ps = DBConnection.conn.prepareStatement(sql);
-            ps.setInt(1, countryID);
-            ResultSet rs = ps.executeQuery();
-            while(rs.next()){
-                countryName = rs.getString("Country");
-            }
-        } catch (SQLException e ){
-            e.getMessage();
-        }
-
-        return countryName;
+        return null;
     }
 
     public static void modifyAppointment(
@@ -195,6 +180,36 @@ public class DBQuery {
         } catch (Exception e){
             e.getMessage();
         }
+        return null;
+    }
+
+    public static String getCustomerCountry(int divisionID){
+        System.out.println("DB " + divisionID);
+        int countryID = 0;
+        try {
+            String sql = "SELECT * FROM first_level_divisions WHERE Division_ID = ? ";
+            PreparedStatement ps = DBConnection.conn.prepareStatement(sql);
+            ps.setInt(1, divisionID);
+            ResultSet rs = ps.executeQuery();
+            while(rs.next()){
+                countryID = rs.getInt("Country_ID");
+            }
+        } catch (Exception e){
+            e.getMessage();
+        }
+        System.out.println("Country Number " + countryID);
+        try {
+            String sql = "SELECT * FROM countries WHERE Country_ID = ? ";
+            PreparedStatement ps = DBConnection.conn.prepareStatement(sql);
+            ps.setInt(1, countryID);
+            ResultSet rs = ps.executeQuery();
+            while(rs.next()){
+                return rs.getString("Country");
+            }
+        } catch (Exception e){
+            e.getMessage();
+        }
+
         return null;
     }
 
@@ -258,6 +273,27 @@ public class DBQuery {
         }catch(Exception e){
             e.getMessage();
         }
+    }
 
+    public static void deleteCustomer(int customerID){
+        try {
+            String sql = "DELETE FROM appointments WHERE Customer_ID = ?";
+            PreparedStatement ps = DBConnection.conn.prepareStatement(sql);
+            ps.setInt(1, customerID);
+            int result = ps.executeUpdate();
+            System.out.println(result);
+        } catch (Exception e){
+            e.getMessage();
+        }
+
+        try {
+            String sql = "DELETE FROM customers WHERE Customer_ID = ?";
+            PreparedStatement ps = DBConnection.conn.prepareStatement(sql);
+            ps.setInt(1, customerID);
+            ps.executeUpdate();
+
+        } catch (Exception e){
+            e.getMessage();
+        }
     }
 }

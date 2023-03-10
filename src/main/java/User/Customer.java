@@ -20,7 +20,6 @@ public class Customer {
 
     public Customer(int cid) throws SQLException {
          this.ID = cid;
-         //this.State = "State";
          ResultSet rs = DBQuery.customerQuery(cid);
          while (rs.next()){
              this.Name = rs.getString("Customer_Name");

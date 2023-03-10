@@ -29,6 +29,7 @@ import static java.time.temporal.ChronoUnit.DAYS;
 
 public class AppointmentsController {
     public Button ModAppointment;
+    public Button modCustomer;
     private User loggedInUser = LogInController.getUser();
     private static ObservableList<Appointment> filteredAppointments = FXCollections.observableArrayList();
     private ObservableList<Appointment> associatedAppointments = FXCollections.observableArrayList();
@@ -107,6 +108,19 @@ public class AppointmentsController {
             e.getMessage();
         }
     }
+
+    @FXML
+    public void deleteCustomer(){
+        if(SceneManager.AlertPopup("Delete User", "Deleting this user will delete all appointments associated with this user.", "Are You Sure?")){
+            System.out.println("Fake Delete");
+            int customerID = customerTable.getSelectionModel().getSelectedItem().getID();
+            System.out.println(customerID);
+            DBQuery.deleteCustomer(customerID);
+            user.refreshAppointments();
+            user.refreshCustomers();
+        }
+    }
+
     @FXML
     public void AppointmentExitClick() throws SQLException {
         SceneManager.CloseApplication();
@@ -192,6 +206,29 @@ public class AppointmentsController {
             appointmentTable.refresh();
             user.refreshCustomers();
             customerTable.refresh();
+        }
+    }
+
+    @FXML
+    public void ModCustomer(){
+        try {
+            FXMLLoader loader = new FXMLLoader(Main.class.getResource("ModCustomer.fxml"));
+            Parent root = loader.load();
+            ModCustomer ma = loader.getController();
+            System.out.println("ms Loaded");
+            Customer customer = customerTable.getSelectionModel().getSelectedItem();
+            System.out.println("Sending Application" + customer);
+            ma.setSelectedCustomer(customer);
+            ma.setTextFields();
+            Stage stage = (Stage) modCustomer.getScene().getWindow();
+            Scene scene = new Scene(root);
+            stage.setTitle("Update Customer");
+            stage.setScene(scene);
+            stage.show();
+        } catch (Exception e){
+            e.getMessage();
+            SceneManager.ErrorPopup("Please Select An Appointment");
+            System.out.println("Select Appointment");
         }
     }
 }
