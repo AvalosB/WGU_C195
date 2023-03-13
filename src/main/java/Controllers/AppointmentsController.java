@@ -227,8 +227,8 @@ public class AppointmentsController {
             stage.show();
         } catch (Exception e){
             e.getMessage();
-            SceneManager.ErrorPopup("Please Select An Appointment");
-            System.out.println("Select Appointment");
+            SceneManager.ErrorPopup("Please Select a Customer");
+            System.out.println("Select Customer");
         }
     }
 }

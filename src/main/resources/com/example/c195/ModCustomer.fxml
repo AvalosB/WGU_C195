@@ -4,12 +4,12 @@
 <?import javafx.scene.layout.*?>
 <?import javafx.scene.text.*?>
 
-<AnchorPane prefHeight="500.0" prefWidth="425.0" xmlns="http://javafx.com/javafx/11.0.14-internal" xmlns:fx="http://javafx.com/fxml/1" fx:controller="Controllers.ModCustomer">
+<AnchorPane prefHeight="500.0" prefWidth="425.0" xmlns="http://javafx.com/javafx/17.0.2-ea" xmlns:fx="http://javafx.com/fxml/1" fx:controller="Controllers.ModCustomer">
     <children>
         <Pane prefHeight="500.0" prefWidth="425.0">
             <children>
                 <TextField fx:id="modCustomerAddress" layoutX="210.0" layoutY="175.0" />
-                <Button fx:id="modCustomerCancel" layoutX="307.0" layoutY="425.0" mnemonicParsing="false" text="Cancel" />
+                <Button fx:id="modCustomerCancel" layoutX="307.0" layoutY="425.0" mnemonicParsing="false" onAction="#onCancelClick" text="Cancel" />
                 <Label layoutX="15.0" layoutY="15.0" text="Add Customer">
                     <font>
                         <Font size="18.0" />
@@ -50,7 +50,7 @@
                         <Font size="18.0" />
                     </font>
                 </Label>
-                <Button fx:id="modCustomerSave" layoutX="213.0" layoutY="425.0" mnemonicParsing="false" text="Save" />
+                <Button fx:id="modCustomerSave" layoutX="213.0" layoutY="425.0" mnemonicParsing="false" onAction="#onSaveClick" text="Save" />
                 <TextField fx:id="modCustomerID" editable="false" layoutX="210.0" layoutY="75.0" promptText="Auto-Generated" />
                 <TextField fx:id="modCustomerName" layoutX="210.0" layoutY="125.0" />
                 <TextField fx:id="modCustomerPhone" layoutX="210.0" layoutY="225.0" />

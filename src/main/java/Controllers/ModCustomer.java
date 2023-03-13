@@ -9,6 +9,7 @@ import javafx.scene.control.Button;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.TextField;
 
+import java.io.IOException;
 import java.sql.ResultSet;
 
 public class ModCustomer {
@@ -100,4 +101,32 @@ public class ModCustomer {
         modCustomerStateComboBox.setItems(stateOL);
         modCustomerCountryComboBox.getSelectionModel().selectFirst();
     }
+
+    @FXML
+    public void onCancelClick() {
+        if (SceneManager.AlertPopup("Confirm", "These changes will Not be saved.", "Are you sure?")){
+            try {
+                SceneManager.ChangeScene("Appointments.fxml", modCustomerCancel, "Main Menu");
+            } catch (IOException e) {
+                System.out.println("Error Canceling Modded Appointment");
+            }
+        }
+    }
+
+    @FXML
+    public void onSaveClick(){
+
+        //get division and countyr id
+        //DBQuery.getdivisionID();
+        int countryID = DBQuery.getCountryID(this.Country);
+
+
+        try {
+            SceneManager.ChangeScene("Appointments.fxml", modCustomerSave, "Main Menu");
+        } catch(Exception e){
+            e.getMessage();
+        }
+    }
+
+
 }

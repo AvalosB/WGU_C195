@@ -10,8 +10,8 @@ public class DBConnection {
 
     private static final String protocol = "jdbc";
     private static final String vendorName = ":mysql:";
-    private static final String ipAddress = "//192.168.0.208:3306/client_schedule";
-    //private static final String ipAddress = "//127.0.0.1:3306/client_schedule";
+    //private static final String ipAddress = "//192.168.0.140:3306/client_schedule";
+    private static final String ipAddress = "//127.0.0.1:3306/client_schedule";
 
     private static final String jdbcURL = protocol + vendorName + ipAddress + "?connectionTimeZone=SERVER";
 
@@ -19,7 +19,7 @@ public class DBConnection {
 
     public static Connection conn = null;
 
-    private static final String username = "Brian";
+    private static final String username = "root";
     private static final String password = "PIEsandwich!@23";
 
     /**

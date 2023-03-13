@@ -296,4 +296,38 @@ public class DBQuery {
             e.getMessage();
         }
     }
+
+    public static int getdivisionID(String divisionName){
+        try{
+            String sql = "SELECT Division_ID from first_level_divisions WHERE Division = ?";
+            PreparedStatement ps = DBConnection.conn.prepareStatement(sql);
+            ps.setString(1, divisionName);
+            ResultSet rs = ps.executeQuery();
+            while (rs.next()){
+                return rs.getInt("Division_ID");
+            }
+        } catch (Exception e){
+            e.getMessage();
+        }
+        return 0;
+    }
+
+    public static int getCountryID(String countryName){
+        try{
+            String sql = "SELECT Country_ID from countries WHERE Country = ?";
+            PreparedStatement ps = DBConnection.conn.prepareStatement(sql);
+            ps.setString(1, countryName);
+            ResultSet rs = ps.executeQuery();
+            while (rs.next()){
+                return rs.getInt("Country_ID");
+            }
+        } catch (Exception e){
+            e.getMessage();
+        }
+        return 0;
+    }
+
+    public static void updateCustomer(){
+        
+    }
 }
