@@ -23,13 +23,14 @@ import java.sql.SQLException;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
-import java.util.concurrent.atomic.AtomicBoolean;
+import java.util.concurrent.atomic.AtomicReference;
 
 import static java.time.temporal.ChronoUnit.DAYS;
 
 public class AppointmentsController {
     public Button ModAppointment;
     public Button modCustomer;
+    public Button reportsButton;
     private User loggedInUser = LogInController.getUser();
     private static ObservableList<Appointment> filteredAppointments = FXCollections.observableArrayList();
     private ObservableList<Appointment> associatedAppointments = FXCollections.observableArrayList();
@@ -73,7 +74,7 @@ public class AppointmentsController {
         appEnd.setCellValueFactory(new PropertyValueFactory<>("end"));
         appCustID.setCellValueFactory(new PropertyValueFactory<>("customerID"));
         appUserID.setCellValueFactory(new PropertyValueFactory<>("userID"));
-        appContID.setCellValueFactory(new PropertyValueFactory<>("contactID"));
+        appContID.setCellValueFactory(new PropertyValueFactory<>("contactName"));
 
         customerTable.setItems(user.getAssociatedCustomers());
         customerID.setCellValueFactory(new PropertyValueFactory<>("iD"));
@@ -85,6 +86,7 @@ public class AppointmentsController {
 
         associatedAppointments = user.getAppointments();
 
+        String dateAndTime;
         associatedAppointments.forEach((app) -> {
             DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm");
             LocalDateTime appStart = LocalDateTime.parse(app.getStart(), dtf);
@@ -92,11 +94,14 @@ public class AppointmentsController {
 
             if(appStart.isAfter(now) && appStart.isBefore(now.plusMinutes(15))){
                 this.appInFifteen = true;
+                String message;
+                message = "Appointment: " + app.getID() + "   Start: " + app.getStart();
+                SceneManager.AlertPopup("Alert", "Appointment in 15 minutes", message);
             }
         });
 
-        if(appInFifteen){
-            SceneManager.ErrorPopup("You Have an Appointment Within 15 Minutes");
+        if(!appInFifteen){
+            SceneManager.ErrorPopup("You have no appointments withing the next 15 minutes");
         }
     }
 
@@ -198,8 +203,10 @@ public class AppointmentsController {
 
     @FXML
     public void removeAppointment() throws SQLException {
-        if(SceneManager.AlertPopup("Confirm", "Permenently Delete this Appointment?", "Are you sure?")){
-            Appointment app = appointmentTable.getSelectionModel().getSelectedItem();
+        Appointment app = appointmentTable.getSelectionModel().getSelectedItem();
+
+        if(SceneManager.AlertPopup("Confirm", "Permanently Delete this Appointment?", "Appointment ID: " + app.id + " Type: " + app.getType())){
+
             int id = app.getID();
             DBQuery.deleteAppointment(id);
             User.removeAppointment(app);
@@ -230,5 +237,10 @@ public class AppointmentsController {
             SceneManager.ErrorPopup("Please Select a Customer");
             System.out.println("Select Customer");
         }
+    }
+
+    @FXML
+    public void onReportsButtonClick() throws IOException{
+        SceneManager.ChangeScene("Reports.fxml", reportsButton, "Reports");
     }
 }

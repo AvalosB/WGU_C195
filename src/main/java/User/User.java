@@ -11,7 +11,7 @@ import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 
 public class User {
-    private static ObservableList<Appointment> Appointments = FXCollections.observableArrayList();
+    public static ObservableList<Appointment> Appointments = FXCollections.observableArrayList();
     private static ObservableList<Customer> associatedCustomers = FXCollections.observableArrayList();
     private static int UserID;
     private ArrayList<Integer> uniqueUserIDS = new ArrayList<Integer>();

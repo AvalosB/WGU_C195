@@ -99,7 +99,7 @@ public class ModCustomer {
         }
 
         modCustomerStateComboBox.setItems(stateOL);
-        modCustomerCountryComboBox.getSelectionModel().selectFirst();
+        modCustomerStateComboBox.getSelectionModel().selectFirst();
     }
 
     @FXML
@@ -115,11 +115,22 @@ public class ModCustomer {
 
     @FXML
     public void onSaveClick(){
-
-        //get division and countyr id
-        //DBQuery.getdivisionID();
+        int custID = selectedCustomer.getID();
+        String custName = modCustomerName.getText();
+        String custAddress = modCustomerAddress.getText();
+        String custPhone = modCustomerPhone.getText();
         int countryID = DBQuery.getCountryID(this.Country);
+        int custDivision = DBQuery.getdivisionID(modCustomerStateComboBox.getSelectionModel().getSelectedItem().toString());
+        String custPostalCode = modCustomerPostalCode.getText();
 
+        try {
+            DBQuery.updateCustomer(custName, custAddress, custPhone, custDivision, custPostalCode, custID);
+        } catch (Exception e){
+            System.out.println("Errir");
+            e.getMessage();
+        }
+
+        LogInController.user.refreshCustomers();
 
         try {
             SceneManager.ChangeScene("Appointments.fxml", modCustomerSave, "Main Menu");

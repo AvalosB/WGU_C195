@@ -23,12 +23,18 @@ public class DBQuery {
         return 0;
     }
 
-    public static ResultSet appointmentsQuery(int userID) throws SQLException {
-        String sql = "SELECT * FROM appointments WHERE User_ID = ?";
-        PreparedStatement ps = DBConnection.conn.prepareStatement(sql);
-        ps.setInt(1, userID);
-        ResultSet rs = ps.executeQuery();
-        return rs;
+    public static ResultSet appointmentsQuery(int userID) {
+    System.out.println("AQ: " + userID);
+        try{
+            String sql = "SELECT * FROM appointments WHERE User_ID = ?";
+            PreparedStatement ps = DBConnection.conn.prepareStatement(sql);
+            ps.setInt(1, userID);
+            ResultSet rs = ps.executeQuery();
+            return rs;
+        }catch (Exception e){
+            e.getMessage();
+        }
+        return null;
     }
 
     public static ResultSet customerQuery(int CustomerID) throws SQLException {
@@ -327,7 +333,38 @@ public class DBQuery {
         return 0;
     }
 
-    public static void updateCustomer(){
-        
+    public static void updateCustomer(String name, String address, String phone, int divisonID, String pc, int custID){
+        try{
+
+            String sql = "UPDATE customers SET Customer_Name = ?, Address = ?, Phone = ?, Division_ID = ?, Postal_Code = ? WHERE Customer_ID = ?";
+            PreparedStatement ps = DBConnection.conn.prepareStatement(sql);
+            ps.setString(1, name);
+            ps.setString(2, address);
+            ps.setString(3, phone);
+            ps.setInt(4, divisonID);
+            ps.setString(5, pc);
+            ps.setInt(6, custID);
+            ps.executeUpdate();
+            System.out.println("Updated");
+        } catch(Exception e){
+            System.out.println("Error");
+            e.getMessage();
+        }
+    }
+
+    public static String contactNameQuery(int contactID){
+        try {
+            String sql = "SELECT * FROM contacts WHERE Contact_ID = ?";
+            PreparedStatement ps = DBConnection.conn.prepareStatement(sql);
+            ps.setInt(1, contactID);
+            ResultSet rs = ps.executeQuery();
+            while(rs.next()){
+                System.out.println("cnq " + rs.getInt("Contact_ID"));
+                return rs.getString("Contact_Name");
+            }
+        } catch (SQLException e){
+            System.out.println("Error with Contact Query");
+        }
+        return null;
     }
 }

@@ -62,6 +62,11 @@
             <Button fx:id="addCustomerButton" layoutX="45.0" layoutY="294.0" mnemonicParsing="false" onAction="#addCustomer" text="Add" />
             <Button fx:id="modCustomer" layoutX="127.0" layoutY="294.0" mnemonicParsing="false" onAction="#ModCustomer" text="Update" />
             <Button fx:id="deleteCustomerButton" layoutX="215.0" layoutY="294.0" mnemonicParsing="false" onAction="#deleteCustomer" text="Delete" />
+            <Button fx:id="reportsButton" layoutX="895.0" layoutY="224.0" mnemonicParsing="false" onAction="#onReportsButtonClick" text="Reports">
+               <font>
+                  <Font size="18.0" />
+               </font>
+            </Button>
          </children></AnchorPane>
   </items>
 </SplitPane>
