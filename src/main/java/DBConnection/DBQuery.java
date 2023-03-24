@@ -367,4 +367,49 @@ public class DBQuery {
         }
         return null;
     }
+
+    public static int countDivision(int divisionID){
+        try{
+            String sql = "SELECT COUNT(Division_ID) AS DivisionCount FROM Customers";
+            PreparedStatement ps = DBConnection.conn.prepareStatement(sql);
+            ResultSet rs = ps.executeQuery();
+            while(rs.next()){
+                return rs.getInt("DivisionCount");
+            }
+        } catch (Exception e){
+            e.getMessage();
+        }
+
+        return 0;
+    }
+
+    public static String countryName(int cID){
+        try{
+            String sql = "SELECT Country_Name WHERE Country_ID = ?";
+            PreparedStatement ps = DBConnection.conn.prepareStatement(sql);
+            ps.setInt(1, cID);
+            ResultSet rs = ps.executeQuery();
+            while(rs.next()){
+                return rs.getString("Country_Name");
+            }
+        } catch (Exception e){
+            e.getMessage();
+        }
+        return null;
+    }
+
+    public static int getCustomerDivisionID(int customerID){
+        try {
+            String sql = "SELECT * FROM Customers WHERE Customer_ID = ?";
+            PreparedStatement ps = DBConnection.conn.prepareStatement(sql);
+            ps.setInt(1, customerID);
+            ResultSet rs = ps.executeQuery();
+            while(rs.next()){
+                return rs.getInt("Division_ID");
+            }
+        } catch (Exception e){
+            e.getMessage();
+        }
+        return 0;
+    }
 }

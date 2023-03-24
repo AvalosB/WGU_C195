@@ -13,4 +13,5 @@ module com.example.c195 {
     exports Controllers;
     opens Controllers to javafx.fxml;
     opens User to javafx.base;
+    opens Logger to javafx.base;
 }

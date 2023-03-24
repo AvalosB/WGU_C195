@@ -29,15 +29,15 @@
             </TableView>
             <TableView fx:id="reportsMonthTable" layoutX="25.0" layoutY="325.0" prefHeight="200.0" prefWidth="387.0">
               <columns>
-                <TableColumn prefWidth="132.0" text="Appointment Month" />
-                <TableColumn prefWidth="103.0" text="Type" />
-                  <TableColumn prefWidth="151.0" text="Total Appointments" />
+                <TableColumn fx:id="appointmentMonth" prefWidth="132.0" text="Appointment Month" />
+                <TableColumn fx:id="appointmentType" prefWidth="103.0" text="Type" />
+                  <TableColumn fx:id="appointmentTotal" prefWidth="151.0" text="Total Appointments" />
               </columns>
             </TableView>
             <TableView fx:id="reportsCountryTable" layoutX="500.0" layoutY="325.0" prefHeight="200.0" prefWidth="247.0">
               <columns>
-                <TableColumn prefWidth="121.0" text="Country" />
-                <TableColumn prefWidth="125.0" text="Total Customers" />
+                <TableColumn fx:id="countryName" prefWidth="121.0" text="Country Name" />
+                <TableColumn fx:id="totalCustomers" prefWidth="125.0" text="Total Customers" />
               </columns>
             </TableView>
             <Button fx:id="reportsBack" layoutX="550.0" layoutY="550.0" mnemonicParsing="false" onAction="#onBackClick" text="Back">
@@ -46,6 +46,8 @@
                </font>
             </Button>
             <Button fx:id="reportsLogout" layoutX="650.0" layoutY="550.0" mnemonicParsing="false" onAction="#onLogoutClick" text="Logout" />
+            <ComboBox fx:id="monthFilter" layoutX="25.0" layoutY="294.0" prefWidth="150.0" />
+            <ComboBox fx:id="typeFilter" layoutX="191.0" layoutY="294.0" prefWidth="150.0" />
          </children>
       </Pane>
    </children>

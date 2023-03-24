@@ -188,7 +188,7 @@ public class AppointmentsController {
             Appointment app = appointmentTable.getSelectionModel().getSelectedItem();
             System.out.println("Sending Application" + app);
             ma.setSelectedAppointment(app);
-            ma.setTextFields();
+            //ma.setTextFields();
             Stage stage = (Stage) ModAppointment.getScene().getWindow();
             Scene scene = new Scene(root);
             stage.setTitle("Update Appointment");

@@ -21,7 +21,7 @@ public class ModAppointment {
     public Button AppointmentSave;
     public Button AppointmentCancel;
     public TextField Title;
-    public TextField Type;
+    public ComboBox Type;
     public TextField Location;
     public TextField Description;
     public DatePicker StartDate;
@@ -43,6 +43,7 @@ public class ModAppointment {
         setContactComboBox();
         setUserIDBox();
         setCustomerIDBox();
+        setAppointmentTypeComboBox();
         StartDate.setDayCellFactory(param -> new DateCell() {
             @Override
             public void updateItem(LocalDate date, boolean empty) {
@@ -60,6 +61,20 @@ public class ModAppointment {
         });
     }
 
+    private void setAppointmentTypeComboBox(){
+        ObservableList<String> appointmentTypes = FXCollections.observableArrayList(
+                "Planning",
+                "Planning Session",
+                "De-Briefing",
+                "Decision-Making",
+                "Problem-Solving",
+                "Retrospective",
+                "Other"
+        );
+
+        Type.setItems(appointmentTypes);
+        Type.getSelectionModel().selectFirst();
+    }
 
     private void setContactComboBox(){
         ResultSet rs = DBQuery.contactQuery();
@@ -115,7 +130,7 @@ public class ModAppointment {
         String Title = this.Title.getText();
         String appointmentDescription = this.Description.getText();
         String appointmentLocation = this.Location.getText();
-        String appointmentType = this.Type.getText();
+        String appointmentType = (String) Type.getValue();
         String appointmentStart = StartDate.getValue() + " " + StartTimeBox.getValue();
         String appointmentEnd = EndDate.getValue() + " " + EndTimeBox.getValue();
         LocalDateTime now = LocalDateTime.now();
@@ -143,7 +158,7 @@ public class ModAppointment {
         this.selectedAppointment = app;
         this.appointmentID.setText(Integer.toString(this.selectedAppointment.getID()));
         this.Title.setText(this.selectedAppointment.getTitle());
-        this.Type.setText(this.selectedAppointment.getType());
+        this.Type.setValue(this.selectedAppointment.getType());
         this.Location.setText(this.selectedAppointment.getLocation());
         this.Description.setText(this.selectedAppointment.getDescription());
         this.CustomerID.setValue(Integer.toString(this.selectedAppointment.getCustomerID()));
@@ -157,10 +172,6 @@ public class ModAppointment {
         String et = this.selectedAppointment.End.split(" ")[1];
         this.StartTimeBox.setValue(st);
         this.EndTimeBox.setValue(et);
-    }
-
-    public void setTextFields(){
-
     }
 
     private void setAppointmentTimes(){

@@ -1,6 +1,8 @@
 package Controllers;
 
 import DBConnection.DBQuery;
+import Logger.CountryReport;
+import Logger.MonthReport;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
@@ -34,12 +36,36 @@ public class ReportsController {
     public TableColumn appCustID;
     public TableView reportsContactTable;
     private static ObservableList<String> contactList = FXCollections.observableArrayList();
+    public TableView reportsCountryTable;
+    public TableColumn countryName;
+    public TableColumn totalCustomers;
+    public TableView reportsMonthTable;
+    public TableColumn appointmentMonth;
+    public TableColumn appointmentType;
+    public TableColumn appointmentTotal;
+    public ComboBox monthFilter;
+    public ComboBox typeFilter;
     private ObservableList<Appointment> associatedAppointments = FXCollections.observableArrayList();
+    public ObservableList<CountryReport> countryReportList = FXCollections.observableArrayList();
+    public ObservableList<MonthReport> monthReportList = FXCollections.observableArrayList();
 
 
     @FXML
     protected void initialize(){
         setContactComboBox();
+
+        CountryReport us = new CountryReport("U.S");
+        CountryReport uk = new CountryReport("UK");
+        CountryReport can = new CountryReport("Cananda");
+        countryReportList.add(us);
+        countryReportList.add(uk);
+        countryReportList.add(can);
+
+        setMonthTable();
+        reportsMonthTable.setItems(monthReportList);
+        appointmentMonth.setCellValueFactory(new PropertyValueFactory<>("month"));
+        appointmentType.setCellValueFactory(new PropertyValueFactory<>("type"));
+        appointmentTotal.setCellValueFactory(new PropertyValueFactory<>("count"));
 
         setContactTable();
         reportsContactTable.setItems(associatedAppointments);
@@ -51,6 +77,13 @@ public class ReportsController {
         appStart.setCellValueFactory(new PropertyValueFactory<>("start"));
         appEnd.setCellValueFactory(new PropertyValueFactory<>("end"));
         appCustID.setCellValueFactory(new PropertyValueFactory<>("customerID"));
+
+        setCountryTable();
+        reportsCountryTable.setItems(countryReportList);
+        countryName.setCellValueFactory(new PropertyValueFactory<>("countryName"));
+        totalCustomers.setCellValueFactory(new PropertyValueFactory<>("customerCount"));
+
+        System.out.println("Country List Size: "+ countryReportList.size());
     }
 
     private void setContactComboBox(){
@@ -85,7 +118,6 @@ public class ReportsController {
         int userID = LogInController.user.getUserID();
         String selectedContact = (String) reportsContactComboBox.getSelectionModel().getSelectedItem();
         try {
-            System.out.println("try");
             ResultSet rs = DBQuery.appointmentsQuery(userID);
             while(rs.next()){
                 String ContactName = DBQuery.contactNameQuery(rs.getInt("Contact_ID"));
@@ -101,7 +133,6 @@ public class ReportsController {
                     int uID = rs.getInt("User_ID");
                     int contID = rs.getInt("Contact_ID");
                     Appointment app = new Appointment(id, title, desc, loc, type, start, end, custID, uID, contID);
-                    System.out.println("Created APp");
                     this.associatedAppointments.add(app);
                 }
             }
@@ -112,6 +143,52 @@ public class ReportsController {
     }
 
     public void setCountryTable(){
+        ObservableList <Appointment> userAppointments = FXCollections.observableArrayList();
+        userAppointments = LogInController.user.getAppointments();
+
+        userAppointments.forEach((app) -> {
+            int customerID = app.getCustomerID();
+            int divisionID = DBQuery.getCustomerDivisionID(customerID);
+            String countryName = DBQuery.getCustomerCountry(divisionID);
+
+            countryReportList.forEach((countryReport -> {
+                String cn = countryReport.getCountryName();
+                if(cn.matches(countryName)){
+                    countryReport.addToCount();
+                }
+            }));
+        });
+    }
+
+    public void setMonthTable(){
+        ObservableList <Appointment> userAppointments = FXCollections.observableArrayList();
+        ObservableList <Appointment> filteredAppointments = FXCollections.observableArrayList();
+        userAppointments = LogInController.user.getAppointments();
+
+        ObservableList<String> appointmentTypes = FXCollections.observableArrayList(
+                "Planning",
+                "Planning Session",
+                "De-Briefing",
+                "Decision-Making",
+                "Problem-Solving",
+                "Retrospective",
+                "Other"
+        );
+
+        ObservableList<String> Months = FXCollections.observableArrayList(
+                "January", "February", "March", "April", "May", "June", "July","August", "September", "October", "November", "December"
+        );
+        typeFilter.setItems(appointmentTypes);
+        monthFilter.setItems(Months);
+
+        userAppointments.forEach(app -> {
+            String unparsedMonth = app.getStart();
+            String[] parsedMonth = unparsedMonth.split("");
+            int start = Integer.parseInt(parsedMonth[5] + parsedMonth[6]);
+            String type = app.getType();
+
+
+        });
 
     }
 

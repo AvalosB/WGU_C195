@@ -26,7 +26,7 @@ public class AddAppointment {
     public ComboBox StartTimeBox;
     public ComboBox EndTimeBox;
     public TextField Title;
-    public TextField Type;
+    public ComboBox Type;
     public TextField Location;
     public TextField Description;
     public DatePicker StartDate;
@@ -35,6 +35,7 @@ public class AddAppointment {
     public ObservableList<Integer> ContactComboBoxArray = FXCollections.observableArrayList();
     public ObservableList<Integer> UserIDComboBoxArray = FXCollections.observableArrayList();
     public ObservableList<Integer> CustomerIDComboBoxArray = FXCollections.observableArrayList();
+
     public Button AppointmentSave;
 
 
@@ -44,6 +45,7 @@ public class AddAppointment {
         setUserIDBox();
         setCustomerIDBox();
         setAppointmentTimes();
+        setAppointmentTypeComboBox();
         StartDate.setDayCellFactory(param -> new DateCell() {
             @Override
             public void updateItem(LocalDate date, boolean empty) {
@@ -58,6 +60,21 @@ public class AddAppointment {
                 setDisable(empty || date.compareTo(LocalDate.now()) < 0 );
             }
         });
+    }
+
+    private void setAppointmentTypeComboBox(){
+        ObservableList<String> appointmentTypes = FXCollections.observableArrayList(
+                "Planning",
+                "Planning Session",
+                "De-Briefing",
+                "Decision-Making",
+                "Problem-Solving",
+                "Retrospective",
+                "Other"
+        );
+
+        Type.setItems(appointmentTypes);
+        Type.getSelectionModel().selectFirst();
     }
 
     private void setContactComboBox(){
@@ -104,7 +121,7 @@ public class AddAppointment {
         String appointmentTitle = Title.getText();
         String appointmentDescription = Description.getText();
         String appointmentLocation = Location.getText();
-        String appointmentType = Type.getText();
+        String appointmentType = (String) Type.getValue();
         String appointmentStart = StartDate.getValue() + " " + StartTimeBox.getValue();
         String appointmentEnd = EndDate.getValue() + " " + EndTimeBox.getValue();
         DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
