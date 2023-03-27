@@ -12,7 +12,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 
-public class AddCustomer {
+public class AddCustomer  {
 
     public ComboBox addCustomerCountryComboBox;
     public ComboBox addCustomerStateComboBox;

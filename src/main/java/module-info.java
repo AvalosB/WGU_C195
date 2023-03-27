@@ -2,7 +2,6 @@ module com.example.c195 {
     requires javafx.controls;
     requires javafx.fxml;
     requires javafx.base;
-
     requires com.dlsc.formsfx;
     requires java.sql;
 

@@ -88,7 +88,7 @@ public class AppointmentsController {
 
         associatedAppointments = user.getAppointments();
 
-        String dateAndTime;
+        //Lambda
         associatedAppointments.forEach((app) -> {
             DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm");
             LocalDateTime appStart = LocalDateTime.parse(app.getStart(), dtf);
@@ -103,7 +103,7 @@ public class AppointmentsController {
         });
 
         if(!appInFifteen){
-            SceneManager.ErrorPopup("You have no appointments withing the next 15 minutes");
+            SceneManager.AlertPopup("Alert", "No Appointments Within The Next 15 Minutes", "");
         }
     }
 

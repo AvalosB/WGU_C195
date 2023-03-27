@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="ResourceBundleManager">
+    <file url="file://$PROJECT_DIR$/src/main/java/Language/Nat.properties" />
+    <file url="file://$PROJECT_DIR$/src/main/java/Language/Nat_en.properties" />
+    <file url="file://$PROJECT_DIR$/src/main/java/Language/Nat_fr.properties" />
+    <file url="file://$PROJECT_DIR$/src/main/resources/Nat_en.properties" />
+    <file url="file://$PROJECT_DIR$/src/main/resources/Nat_fr.properties" />
+    <custom-resource-bundle>
+      <file value="file://$PROJECT_DIR$/src/main/java/Language/Nat.properties" />
+      <file value="file://$PROJECT_DIR$/src/main/java/Language/Nat_en.properties" />
+      <file value="file://$PROJECT_DIR$/src/main/java/Language/Nat_fr.properties" />
+      <base-name>Nat</base-name>
+    </custom-resource-bundle>
+    <custom-resource-bundle>
+      <file value="file://$PROJECT_DIR$/src/main/resources/Nat_en.properties" />
+      <file value="file://$PROJECT_DIR$/src/main/resources/Nat_fr.properties" />
+      <base-name>Nat</base-name>
+    </custom-resource-bundle>
+  </component>
+</project>

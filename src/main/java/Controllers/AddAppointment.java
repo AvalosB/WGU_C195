@@ -30,7 +30,7 @@ public class AddAppointment {
     public TextField Description;
     public DatePicker StartDate;
     public DatePicker EndDate;
-
+    public static Boolean overlapping;
     public ObservableList<Integer> ContactComboBoxArray = FXCollections.observableArrayList();
     public ObservableList<Integer> UserIDComboBoxArray = FXCollections.observableArrayList();
     public ObservableList<Integer> CustomerIDComboBoxArray = FXCollections.observableArrayList();
@@ -114,6 +114,7 @@ public class AddAppointment {
 
     @FXML
     private void OnSaveClick(){
+        overlapping = false;
         String appointmentTitle = Title.getText();
         String appointmentDescription = Description.getText();
         String appointmentLocation = Location.getText();
@@ -133,8 +134,8 @@ public class AddAppointment {
         String convertedEnd = TimeZone.convertToLocalDateTimeToUTC(appointmentEnd);
         String convertedCreated = TimeZone.convertToLocalDateTimeToUTC(createTime);
         String convertedLastUpdate = TimeZone.convertToLocalDateTimeToUTC(appointmentLastUpdated);
-
-        if(FormVerification.verifyEndStartDates(convertedStart, convertedEnd) && FormVerification.verifyStartDate(convertedStart )){
+        FormVerification.overlappingAppointments(convertedStart);
+        if(FormVerification.verifyEndStartDates(convertedStart, convertedEnd) && FormVerification.verifyStartDate(convertedStart ) && !overlapping){
             DBQuery.addAppointment(appointmentTitle, appointmentDescription, appointmentLocation, appointmentType, convertedStart, convertedEnd, convertedCreated, appointmentCreatedBy, convertedLastUpdate, appointmentCreatedBy, appointmentCustomerID, appointmentUserID, appointmentContactID);
             LogInController.user.refreshAppointments();
             LogInController.user.refreshCustomers();
@@ -146,6 +147,8 @@ public class AddAppointment {
                 System.out.println("Change Scene Error");
                 e.getMessage();
             }
+        } else if(overlapping){
+            SceneManager.ErrorPopup("You have an OverLapping Appointment");
         } else {
             SceneManager.ErrorPopup("Please Fix Errors!");
         }
