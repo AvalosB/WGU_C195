@@ -14,4 +14,5 @@ public class MonthReport {
     public String getMonth(){ return this.month; }
     public String getType(){ return this.Type; }
     public int getCount(){ return this.count; }
+    public void addCount(){ this.count++;}
 }

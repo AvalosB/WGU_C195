@@ -125,23 +125,29 @@ public class ModAppointment {
 
     @FXML
     public void OnSaveClick(){
-        DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm");
+        DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
         int ID = this.selectedAppointment.getID();
         String Title = this.Title.getText();
         String appointmentDescription = this.Description.getText();
         String appointmentLocation = this.Location.getText();
         String appointmentType = (String) Type.getValue();
-        String appointmentStart = StartDate.getValue() + " " + StartTimeBox.getValue();
-        String appointmentEnd = EndDate.getValue() + " " + EndTimeBox.getValue();
+        String appointmentStart = StartDate.getValue() + " " + StartTimeBox.getValue() + ":00";
+        String appointmentEnd = EndDate.getValue() + " " + EndTimeBox.getValue() + ":00";
         LocalDateTime now = LocalDateTime.now();
         String createTime = (String) dtf.format(now);
         String appointmentCreatedBy = User.getUserName(User.getUserID());
         String appointmentLastUpdated = (String) dtf.format(now);
+
+        String convertedStart = TimeZone.convertToLocalDateTimeToUTC(appointmentStart);
+        String convertedEnd = TimeZone.convertToLocalDateTimeToUTC(appointmentEnd);
+        String convertedLastUpdate = TimeZone.convertToLocalDateTimeToUTC(appointmentLastUpdated);
+
+
         int appointmentCustomerID = Integer.parseInt(CustomerID.getValue().toString());
         int appointmentUserID = Integer.parseInt(UserID.getValue().toString());
         int appointmentContactID = Integer.parseInt(Contact.getValue().toString());
-        if(FormVerification.verifyEndStartDates(appointmentStart, appointmentEnd) && FormVerification.verifyStartDate(appointmentStart)){
-            DBQuery.modifyAppointment(Title, appointmentDescription, appointmentLocation, appointmentType, appointmentStart, appointmentEnd, createTime, appointmentCreatedBy, appointmentLastUpdated, appointmentCreatedBy, appointmentCustomerID, appointmentUserID, appointmentContactID, ID);
+        if(FormVerification.verifyEndStartDates(convertedStart, convertedEnd) && FormVerification.verifyStartDate(convertedStart)){
+            DBQuery.modifyAppointment(Title, appointmentDescription, appointmentLocation, appointmentType, convertedStart, convertedEnd, convertedLastUpdate, appointmentCreatedBy, appointmentCustomerID, appointmentUserID, appointmentContactID, ID);
             LogInController.user.refreshAppointments();
             LogInController.user.refreshCustomers();
             try {

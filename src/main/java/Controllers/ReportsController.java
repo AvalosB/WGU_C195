@@ -8,7 +8,6 @@ import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.control.ComboBox;
-import User.User;
 import User.Appointment;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
@@ -18,9 +17,7 @@ import java.io.IOException;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.text.SimpleDateFormat;
-
-import static Controllers.LogInController.user;
-import static User.User.Appointments;
+import java.util.concurrent.atomic.AtomicInteger;
 
 public class ReportsController {
     public Button reportsBack;
@@ -48,6 +45,21 @@ public class ReportsController {
     private ObservableList<Appointment> associatedAppointments = FXCollections.observableArrayList();
     public ObservableList<CountryReport> countryReportList = FXCollections.observableArrayList();
     public ObservableList<MonthReport> monthReportList = FXCollections.observableArrayList();
+    public ObservableList<String> appointmentTypes = FXCollections.observableArrayList(
+            "Planning",
+            "Planning Session",
+            "De-Briefing",
+            "Decision-Making",
+            "Problem-Solving",
+            "Retrospective",
+            "Other"
+    );
+
+    public ObservableList<String> Months = FXCollections.observableArrayList(
+            "January", "February", "March", "April", "May", "June", "July","August", "September", "October", "November", "December"
+    );
+
+    public ObservableList<Appointment> userAppointments = FXCollections.observableArrayList( LogInController.user.getAppointments() );
 
 
     @FXML
@@ -66,6 +78,7 @@ public class ReportsController {
         appointmentMonth.setCellValueFactory(new PropertyValueFactory<>("month"));
         appointmentType.setCellValueFactory(new PropertyValueFactory<>("type"));
         appointmentTotal.setCellValueFactory(new PropertyValueFactory<>("count"));
+        setMonthValues();
 
         setContactTable();
         reportsContactTable.setItems(associatedAppointments);
@@ -143,9 +156,6 @@ public class ReportsController {
     }
 
     public void setCountryTable(){
-        ObservableList <Appointment> userAppointments = FXCollections.observableArrayList();
-        userAppointments = LogInController.user.getAppointments();
-
         userAppointments.forEach((app) -> {
             int customerID = app.getCustomerID();
             int divisionID = DBQuery.getCustomerDivisionID(customerID);
@@ -160,36 +170,36 @@ public class ReportsController {
         });
     }
 
-    public void setMonthTable(){
-        ObservableList <Appointment> userAppointments = FXCollections.observableArrayList();
-        ObservableList <Appointment> filteredAppointments = FXCollections.observableArrayList();
-        userAppointments = LogInController.user.getAppointments();
-
-        ObservableList<String> appointmentTypes = FXCollections.observableArrayList(
-                "Planning",
-                "Planning Session",
-                "De-Briefing",
-                "Decision-Making",
-                "Problem-Solving",
-                "Retrospective",
-                "Other"
-        );
-
-        ObservableList<String> Months = FXCollections.observableArrayList(
-                "January", "February", "March", "April", "May", "June", "July","August", "September", "October", "November", "December"
-        );
+    public void setMonthTable() {
         typeFilter.setItems(appointmentTypes);
         monthFilter.setItems(Months);
+        typeFilter.getSelectionModel().selectFirst();
+        monthFilter.getSelectionModel().selectFirst();
+    }
+
+    @FXML
+    public void setMonthValues(){
+        monthReportList.clear();
+
+        String tf = (String) typeFilter.getValue();
+        String mf = (String) monthFilter.getValue();
+        MonthReport mr = new MonthReport(mf, tf, 0);
+        monthReportList.add(mr);
 
         userAppointments.forEach(app -> {
             String unparsedMonth = app.getStart();
             String[] parsedMonth = unparsedMonth.split("");
             int start = Integer.parseInt(parsedMonth[5] + parsedMonth[6]);
             String type = app.getType();
-
+            System.out.println("Set Month Values: " + type + " " + tf + " - " + Months.get(start - 1) + " " + mf);
+             if(type.matches(tf) && Months.get(start - 1).matches(mf)){
+                 System.out.println("add");
+                 mr.addCount();
+             }
 
         });
 
+        reportsMonthTable.refresh();
     }
 
 }

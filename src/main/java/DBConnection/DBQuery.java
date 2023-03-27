@@ -1,12 +1,14 @@
 package DBConnection;
 
 import Controllers.LogInController;
+import TimeZone.TimeZone;
 import javafx.collections.ObservableList;
 import User.User;
 
 import java.io.IOException;
 import java.sql.*;
 import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 
 public class DBQuery {
     public static int loginQuery(String username, String password) throws SQLException {
@@ -151,10 +153,10 @@ public class DBQuery {
     }
 
     public static void modifyAppointment(
-            String Title, String Description, String Location, String Type, String Start, String End, String CreateTime, String CreatedBy, String LastUpdated, String LastUpdatedBy, int CustomerID, int UserID, int ContactID, int appID
+            String Title, String Description, String Location, String Type, String Start, String End, String LastUpdated, String LastUpdatedBy, int CustomerID, int UserID, int ContactID, int appID
     ){
         try {
-            String sql = "UPDATE appointments SET Title = ?, Description = ?, Location = ?, Type = ?, Start = ?, End = ?, Create_Date = ?, Created_By = ?, Last_Update = ?, Last_Updated_By = ?, Customer_ID = ?, User_ID = ?, Contact_ID = ? WHERE Appointment_ID = ?";
+            String sql = "UPDATE appointments SET Title = ?, Description = ?, Location = ?, Type = ?, Start = ?, End = ?,Last_Update = ?, Last_Updated_By = ?, Customer_ID = ?, User_ID = ?, Contact_ID = ? WHERE Appointment_ID = ?";
             PreparedStatement ps = DBConnection.conn.prepareStatement(sql);
             ps.setString(1, Title);
             ps.setString(2, Description);
@@ -162,14 +164,12 @@ public class DBQuery {
             ps.setString(4, Type);
             ps.setString(5, Start);
             ps.setString(6, End);
-            ps.setString(7, CreateTime);
-            ps.setString(8, CreatedBy);
-            ps.setString(9, LastUpdated);
-            ps.setString(10, LastUpdatedBy);
-            ps.setInt(11, CustomerID);
-            ps.setInt(12, UserID);
-            ps.setInt(13, ContactID);
-            ps.setInt(14, appID);
+            ps.setString(7, LastUpdated);
+            ps.setString(8, LastUpdatedBy);
+            ps.setInt(9, CustomerID);
+            ps.setInt(10, UserID);
+            ps.setInt(11, ContactID);
+            ps.setInt(12, appID);
             ps.executeUpdate();
         } catch (SQLException e) {
             System.out.println("SQL Exception");
@@ -247,7 +247,11 @@ public class DBQuery {
     }
 
     public static void addCustomerToDB(String name, String address, String postalCode, String phone, String divisionName){
-        LocalDateTime createDate = LocalDateTime.now();
+        DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+        LocalDateTime oldDate = LocalDateTime.now();
+        String dc = dtf.format(oldDate);
+        String createDate = TimeZone.convertToLocalDateTimeToUTC(dc);
+
         int userID = LogInController.user.getUserID();
         String createdBy = UserNameQuery(userID);
         int divisionID = 0;
@@ -334,22 +338,51 @@ public class DBQuery {
     }
 
     public static void updateCustomer(String name, String address, String phone, int divisonID, String pc, int custID){
+        int lastUpdateByID = LogInController.user.getUserID();
+        String lastUpdateBy = getCustomerName(lastUpdateByID);
+        DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+        LocalDateTime oldDate = LocalDateTime.now();
+        String dc = dtf.format(oldDate);
+        String lastUpdate = TimeZone.convertToLocalDateTimeToUTC(dc);
+
+
         try{
 
-            String sql = "UPDATE customers SET Customer_Name = ?, Address = ?, Phone = ?, Division_ID = ?, Postal_Code = ? WHERE Customer_ID = ?";
+            String sql = "UPDATE customers SET Customer_Name = ?, Address = ?, Phone = ?, Last_Update = ?, Last_Updated_By = ?, Division_ID = ?, Postal_Code = ? WHERE Customer_ID = ?";
             PreparedStatement ps = DBConnection.conn.prepareStatement(sql);
             ps.setString(1, name);
             ps.setString(2, address);
             ps.setString(3, phone);
-            ps.setInt(4, divisonID);
-            ps.setString(5, pc);
-            ps.setInt(6, custID);
+            ps.setString(4, lastUpdate);
+            ps.setString(5, lastUpdateBy);
+            ps.setInt(6, divisonID);
+            ps.setString(7, pc);
+            ps.setInt(8, custID);
             ps.executeUpdate();
             System.out.println("Updated");
         } catch(Exception e){
             System.out.println("Error");
             e.getMessage();
         }
+    }
+
+    private static String getCustomerName(int lastUpdateByID) {
+        try {
+            String sql = "SELECT * FROM users WHERE User_ID = ?";
+            PreparedStatement ps = DBConnection.conn.prepareStatement(sql);
+            ps.setInt(1, lastUpdateByID);
+            ResultSet rs = ps.executeQuery();
+
+            while(rs.next()){
+                String name = rs.getString("User_Name");
+                return name;
+            }
+
+        } catch (Exception e){
+            e.getMessage();
+        }
+
+        return null;
     }
 
     public static String contactNameQuery(int contactID){

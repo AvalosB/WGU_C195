@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.text.*?>
+
+<AnchorPane prefHeight="500.0" prefWidth="425.0" xmlns="http://javafx.com/javafx/17.0.2-ea" xmlns:fx="http://javafx.com/fxml/1" fx:controller="Controllers.ModCustomer">
+    <children>
+        <Pane prefHeight="500.0" prefWidth="425.0">
+            <children>
+                <TextField fx:id="modCustomerAddress" layoutX="210.0" layoutY="175.0" />
+                <Button fx:id="modCustomerCancel" layoutX="307.0" layoutY="425.0" mnemonicParsing="false" onAction="#onCancelClick" text="Cancel" />
+                <Label layoutX="15.0" layoutY="15.0" text="Add Customer">
+                    <font>
+                        <Font size="18.0" />
+                    </font>
+                </Label>
+                <Label layoutX="25.0" layoutY="75.0" text="ID">
+                    <font>
+                        <Font size="18.0" />
+                    </font>
+                </Label>
+                <Label layoutX="25.0" layoutY="125.0" text="Name">
+                    <font>
+                        <Font size="18.0" />
+                    </font>
+                </Label>
+                <Label layoutX="25.0" layoutY="175.0" text="Address">
+                    <font>
+                        <Font size="18.0" />
+                    </font>
+                </Label>
+                <Label layoutX="25.0" layoutY="225.0" text="Phone Number">
+                    <font>
+                        <Font size="18.0" />
+                    </font>
+                </Label>
+                <Label layoutX="25.0" layoutY="275.0" text="Country">
+                    <font>
+                        <Font size="18.0" />
+                    </font>
+                </Label>
+                <Label layoutX="25.0" layoutY="325.0" text="State/Province">
+                    <font>
+                        <Font size="18.0" />
+                    </font>
+                </Label>
+                <Label layoutX="25.0" layoutY="375.0" text="Postal Code">
+                    <font>
+                        <Font size="18.0" />
+                    </font>
+                </Label>
+                <Button fx:id="modCustomerSave" layoutX="213.0" layoutY="425.0" mnemonicParsing="false" onAction="#onSaveClick" text="Save" />
+                <TextField fx:id="modCustomerID" editable="false" layoutX="210.0" layoutY="75.0" promptText="Auto-Generated" />
+                <TextField fx:id="modCustomerName" layoutX="210.0" layoutY="125.0" />
+                <TextField fx:id="modCustomerPhone" layoutX="210.0" layoutY="225.0" />
+                <TextField fx:id="modCustomerPostalCode" layoutX="210.0" layoutY="375.0" />
+                <ComboBox fx:id="modCustomerCountryComboBox" layoutX="210.0" layoutY="275.0" onAction="#updateDivisionComboBox" prefWidth="150.0" />
+                <ComboBox fx:id="modCustomerStateComboBox" layoutX="210.0" layoutY="325.0" prefWidth="150.0" />
+            </children></Pane>
+    </children>
+</AnchorPane>

@@ -1,10 +1,11 @@
 package TimeZone;
 
-import java.time.LocalDate;
-import java.time.LocalDateTime;
-import java.time.ZoneId;
-import java.time.ZonedDateTime;
+import java.sql.Timestamp;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.time.*;
 import java.time.format.DateTimeFormatter;
+import java.util.Date;
 
 public class TimeZone {
     public static String getCurrentTimeZone(){
@@ -20,10 +21,36 @@ public class TimeZone {
         return newDate;
     }
 
-    public static LocalDateTime changeStringToDateTime(String date){
-        DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm");
-        LocalDateTime newDate = LocalDateTime.parse(date, dtf);
-        return newDate;
+    public static String convertToLocalDateTimeToUTC(String dateStr) {
+        DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+        LocalDateTime now = LocalDateTime.parse(dateStr, dtf);
+        Timestamp ts = Timestamp.valueOf(now);
+        LocalDateTime ldt = ts.toLocalDateTime();
+        ZonedDateTime zdt = ldt.atZone(ZoneId.of(ZoneId.systemDefault().toString()));
+        ZonedDateTime utczdt = zdt.withZoneSameInstant(ZoneId.of("UTC"));
+        LocalDateTime ldtIn = utczdt.toLocalDateTime();
+
+        ZonedDateTime zdtOut = ldtIn.atZone(ZoneId.of("UTC"));
+        ZonedDateTime zdtOutToLocalTZ = zdtOut.withZoneSameInstant(ZoneId.of(ZoneId.systemDefault().toString()));
+
+        String output = ldtIn.toString().replace("T", " ");
+        return output;
     }
+
+    public static String convertToLocalDateTime(String dateStr) {
+        Timestamp ts = Timestamp.valueOf(dateStr);
+        LocalDateTime ldt = ts.toLocalDateTime();
+        ZonedDateTime zdt = ldt.atZone(ZoneId.of("UTC"));
+        ZonedDateTime utczdt = zdt.withZoneSameInstant(ZoneId.of(ZoneId.systemDefault().toString()));
+        LocalDateTime ldtIn = utczdt.toLocalDateTime();
+
+        ZonedDateTime zdtOut = ldtIn.atZone(ZoneId.of(ZoneId.systemDefault().toString()));
+        ZonedDateTime zdtOutToLocalTZ = zdtOut.withZoneSameInstant(ZoneId.of(ZoneId.systemDefault().toString()));
+        LocalDateTime ldtOutFinal = zdtOutToLocalTZ.toLocalDateTime();
+
+        return ldtOutFinal.toString().substring(0, 16).replace("T", " ");
+    }
+
+
 
 }

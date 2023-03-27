@@ -6,15 +6,14 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
-
+import TimeZone.TimeZone;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Time;
 import java.sql.Timestamp;
-import java.time.LocalDate;
-import java.time.LocalDateTime;
-import java.time.LocalTime;
+import java.time.*;
 import java.time.format.DateTimeFormatter;
 import java.util.Locale;
 
@@ -115,16 +114,13 @@ public class AddAppointment {
 
     @FXML
     private void OnSaveClick(){
-
-        //Make Sure Dates are the Same day
-
         String appointmentTitle = Title.getText();
         String appointmentDescription = Description.getText();
         String appointmentLocation = Location.getText();
         String appointmentType = (String) Type.getValue();
-        String appointmentStart = StartDate.getValue() + " " + StartTimeBox.getValue();
-        String appointmentEnd = EndDate.getValue() + " " + EndTimeBox.getValue();
         DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+        String appointmentStart = StartDate.getValue() + " " + StartTimeBox.getValue() + ":00";
+        String appointmentEnd = EndDate.getValue() + " " + EndTimeBox.getValue() + ":00";
         LocalDateTime now = LocalDateTime.now();
         String createTime = (String) dtf.format(now);
         String appointmentCreatedBy = User.getUserName(User.getUserID());
@@ -132,8 +128,14 @@ public class AddAppointment {
         int appointmentCustomerID = Integer.parseInt(CustomerID.getValue().toString());
         int appointmentUserID = Integer.parseInt(UserID.getValue().toString());
         int appointmentContactID = Integer.parseInt(Contact.getValue().toString());
-        if(FormVerification.verifyEndStartDates(appointmentStart, appointmentEnd) && FormVerification.verifyStartDate(appointmentStart)){
-            DBQuery.addAppointment(appointmentTitle, appointmentDescription, appointmentLocation, appointmentType, appointmentStart, appointmentEnd, createTime, appointmentCreatedBy, appointmentLastUpdated, appointmentCreatedBy, appointmentCustomerID, appointmentUserID, appointmentContactID);
+
+        String convertedStart = TimeZone.convertToLocalDateTimeToUTC(appointmentStart);
+        String convertedEnd = TimeZone.convertToLocalDateTimeToUTC(appointmentEnd);
+        String convertedCreated = TimeZone.convertToLocalDateTimeToUTC(createTime);
+        String convertedLastUpdate = TimeZone.convertToLocalDateTimeToUTC(appointmentLastUpdated);
+
+        if(FormVerification.verifyEndStartDates(convertedStart, convertedEnd) && FormVerification.verifyStartDate(convertedStart )){
+            DBQuery.addAppointment(appointmentTitle, appointmentDescription, appointmentLocation, appointmentType, convertedStart, convertedEnd, convertedCreated, appointmentCreatedBy, convertedLastUpdate, appointmentCreatedBy, appointmentCustomerID, appointmentUserID, appointmentContactID);
             LogInController.user.refreshAppointments();
             LogInController.user.refreshCustomers();
             try {

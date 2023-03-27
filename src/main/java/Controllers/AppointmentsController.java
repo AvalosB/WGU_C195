@@ -20,9 +20,9 @@ import javafx.stage.Stage;
 
 import java.io.IOException;
 import java.sql.SQLException;
-import java.time.LocalDate;
-import java.time.LocalDateTime;
+import java.time.*;
 import java.time.format.DateTimeFormatter;
+import java.util.Formatter;
 import java.util.concurrent.atomic.AtomicReference;
 
 import static java.time.temporal.ChronoUnit.DAYS;
@@ -64,6 +64,8 @@ public class AppointmentsController {
     User user = LogInController.user;
     @FXML
     protected void initialize(){
+        System.out.println(Instant.now());
+
         appointmentTable.setItems(user.getAppointments());
         appID.setCellValueFactory(new PropertyValueFactory<>("iD"));
         appTitle.setCellValueFactory(new PropertyValueFactory<>("title"));

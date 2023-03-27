@@ -11,7 +11,10 @@ import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import java.io.IOException;
 import java.sql.SQLException;
-import java.time.Instant;
+import java.sql.Timestamp;
+import java.time.*;
+import java.time.format.DateTimeFormatter;
+import java.util.Locale;
 
 public class LogInController {
     public Button loginExitButton;
@@ -29,6 +32,8 @@ public class LogInController {
 
     @FXML
     protected void initialize(){
+        Locale.getDefault();
+
 
         timeZone.setText(TimeZone.getCurrentTimeZone());
     }

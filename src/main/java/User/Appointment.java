@@ -1,6 +1,7 @@
 package User;
 
 import DBConnection.DBQuery;
+import TimeZone.TimeZone;
 
 import java.sql.SQLException;
 import java.util.Date;
@@ -24,8 +25,8 @@ public class Appointment {
         this.Description = desc;
         this.Location = location;
         this.Type = type;
-        this.Start = start;
-        this.End = end;
+        this.Start = TimeZone.convertToLocalDateTime(start + ":00");
+        this.End = TimeZone.convertToLocalDateTime(end + ":00");
         this.CustomerID = customerID;
         this.UserID = userID;
         this.ContactID = contactID;

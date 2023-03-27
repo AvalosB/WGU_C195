@@ -7,12 +7,19 @@ import javafx.scene.Scene;
 import javafx.stage.Stage;
 
 import java.io.IOException;
-import java.sql.SQLException;
+import java.util.Locale;
+import java.util.ResourceBundle;
 
 public class Main extends Application {
     @Override
     public void start(Stage stage) throws IOException {
         FXMLLoader fxmlLoader = new FXMLLoader(Main.class.getResource("LogInForm.fxml"));
+        ResourceBundle rb = ResourceBundle.getBundle("Nat", Locale.getDefault());
+
+        if(Locale.getDefault().getLanguage().equals("en") || Locale.getDefault().getLanguage().equals("fr")){
+            System.out.println(rb.getString("Login") + " " + rb.getString("Exit"));
+        }
+
         Scene scene = new Scene(fxmlLoader.load(), 600, 400);
         stage.setTitle("Appointment Scheduler");
         stage.setScene(scene);
